@@ -3,6 +3,7 @@
 #include <functional>
 #include <future>
 #include <cctype>
+#include <stdexcept>
 
 #include <Tempest/Log>
 #include <Tempest/Painter>
@@ -67,10 +68,8 @@ World::World(GameSession& game, std::string_view file, bool startup, std::functi
   :wname(std::move(file)), game(game), wsound(game,*this), wobj(*this) {
   const auto* entry = Resources::vdfsIndex().find(wname);
 
-  if(entry == nullptr) {
-    Tempest::Log::e("unable to open Zen-file: \"",wname,"\"");
-    return;
-    }
+  if(entry == nullptr)
+    throw std::runtime_error("unable to open Zen-file: \"" + wname + '"');
 
   try {
     auto          buf = entry->open_read();

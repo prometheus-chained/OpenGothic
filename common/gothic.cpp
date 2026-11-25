@@ -915,7 +915,10 @@ void Gothic::detectGothicVersion() {
   int score[3]={};
 
   auto gpath = CommandLine::inst().rootPath();
-  if(gpath.find(u"Gothic/")!=std::string::npos || gpath.find(u"gothic/")!=std::string::npos)
+  if(gpath.ends_with(u'/'))
+    gpath.remove_suffix(1);
+  const auto directory = gpath.substr(gpath.rfind(u'/')+1);
+  if(directory==u"Gothic" || directory==u"gothic")
     score[1]++;
   if(FileUtil::exists(nestedPath({u"_work",u"Data",u"Scripts",u"content",u"CUTSCENE",u"OU.BIN"},Dir::FT_File)))
     score[1]++;
